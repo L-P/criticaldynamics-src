@@ -23,6 +23,8 @@
 #include "soundent.h"
 #include "animation.h"
 
+#define SF_TALKMONSTER_NOFOLLOW 1024
+
 //=========================================================
 // Talking monster base class
 // Used for scientists and barneys
@@ -1379,6 +1381,10 @@ void CTalkMonster::StartFollowing(CBaseEntity* pLeader)
 
 bool CTalkMonster::CanFollow()
 {
+	if (FBitSet(pev->spawnflags, SF_TALKMONSTER_NOFOLLOW)) {
+		return false;
+	}
+
 	if (m_MonsterState == MONSTERSTATE_SCRIPT || m_IdealMonsterState == MONSTERSTATE_SCRIPT)
 	{
 		// It's possible for m_MonsterState to still be MONSTERSTATE_SCRIPT when the script has already ended.
@@ -1401,30 +1407,38 @@ void CTalkMonster::FollowerUse(CBaseEntity* pActivator, CBaseEntity* pCaller, US
 	if (m_useTime > gpGlobals->time)
 		return;
 
-	if (pCaller != NULL && pCaller->IsPlayer())
-	{
-		// Pre-disaster followers can't be used
-		if ((pev->spawnflags & SF_MONSTER_PREDISASTER) != 0)
-		{
-			DeclineFollowing();
-		}
-		else if (CanFollow())
-		{
-			LimitFollowers(pCaller, 1);
-
-			if ((m_afMemory & bits_MEMORY_PROVOKED) != 0)
-				ALERT(at_console, "I'm not following you, you evil person!\n");
-			else
-			{
-				StartFollowing(pCaller);
-				SetBits(m_bitsSaid, bit_saidHelloPlayer); // Don't say hi after you've started following
-			}
-		}
-		else
-		{
-			StopFollowing(true);
-		}
+	if (pCaller == NULL || !pCaller->IsPlayer()) {
+		return;
 	}
+
+	// Pre-disaster followers can't be used
+	if ((pev->spawnflags & SF_MONSTER_PREDISASTER) != 0) {
+		DeclineFollowing();
+		return;
+	}
+
+	if (CanFollow()) {
+		LimitFollowers(pCaller, 1);
+
+		if ((m_afMemory & bits_MEMORY_PROVOKED) != 0) {
+			ALERT(at_console, "I'm not following you, you evil person!\n");
+			return;
+		}
+
+		StartFollowing(pCaller);
+		SetBits(m_bitsSaid, bit_saidHelloPlayer); // Don't say hi after you've started following
+
+		return;
+	}
+
+
+	if (FBitSet(pev->spawnflags, SF_TALKMONSTER_NOFOLLOW)) {
+		PlaySentence(m_szGrp[TLK_NOFOLLOW], RANDOM_FLOAT(2.8, 3.2), VOL_NORM, ATTN_IDLE);
+		m_hTalkTarget = pCaller;
+		return;
+	}
+
+	StopFollowing(true);
 }
 
 bool CTalkMonster::KeyValue(KeyValueData* pkvd)

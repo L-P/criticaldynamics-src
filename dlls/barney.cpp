@@ -454,6 +454,7 @@ void CBarney::TalkInit()
 	m_szGrp[TLK_STARE] = "BA_STARE";
 	m_szGrp[TLK_USE] = "BA_OK";
 	m_szGrp[TLK_UNUSE] = "BA_WAIT";
+	m_szGrp[TLK_NOFOLLOW] = "BA_NOFOLLOW";
 	m_szGrp[TLK_STOP] = "BA_STOP";
 
 	m_szGrp[TLK_NOSHOOT] = "BA_SCARED";
