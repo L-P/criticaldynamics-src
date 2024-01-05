@@ -903,8 +903,10 @@ Schedule_t* CScientist::GetSchedule()
 	// so we don't keep calling through the EHANDLE stuff
 	CBaseEntity* pEnemy = m_hEnemy;
 
-	if (HasConditions(bits_COND_HEAR_SOUND))
-	{
+	if (
+		HasConditions(bits_COND_HEAR_SOUND)
+		&& !FBitSet(pev->spawnflags, SF_MONSTER_PREDISASTER)
+	) {
 		CSound* pSound;
 		pSound = PBestSound();
 
@@ -938,8 +940,10 @@ Schedule_t* CScientist::GetSchedule()
 		}
 
 		// Cower when you hear something scary
-		if (HasConditions(bits_COND_HEAR_SOUND))
-		{
+		if (
+			HasConditions(bits_COND_HEAR_SOUND)
+			&& !FBitSet(pev->spawnflags, SF_MONSTER_PREDISASTER)
+		) {
 			CSound* pSound;
 			pSound = PBestSound();
 
