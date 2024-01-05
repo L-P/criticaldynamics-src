@@ -747,6 +747,7 @@ public:
 	void Spawn() override;
 	void Precache() override;
 	bool KeyValue(KeyValueData* pkvd) override;
+	void Think() override;
 
 	static inline CWorld* World = nullptr;
 };

@@ -497,6 +497,7 @@ void CWorld::Spawn()
 {
 	g_fGameOver = false;
 	Precache();
+	pev->nextthink = gpGlobals->time + .1f;
 }
 
 void CWorld::Precache()

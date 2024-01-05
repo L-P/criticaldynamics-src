@@ -19,6 +19,7 @@
 #include "game.h"
 #include "filesystem_utils.h"
 
+cvar_t ent_fire = {"ent_fire", "", FCVAR_SPONLY};
 cvar_t displaysoundlist = {"displaysoundlist", "0"};
 
 // multiplayer server rules
@@ -490,6 +491,7 @@ void GameDLLInit()
 		return;
 	}
 
+	CVAR_REGISTER(&ent_fire);
 	CVAR_REGISTER(&displaysoundlist);
 	CVAR_REGISTER(&allow_spectators);
 

@@ -19,6 +19,7 @@ extern void GameDLLInit( void );
 void GameDLLShutdown();
 
 
+extern cvar_t	ent_fire;
 extern cvar_t	displaysoundlist;
 
 // multiplayer server rules
