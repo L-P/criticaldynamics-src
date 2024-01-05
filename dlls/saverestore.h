@@ -45,11 +45,6 @@ public:
 
 		ASSERT(isValid);
 
-		if (!isValid)
-		{
-			int x = 10;
-		}
-
 		return isValid;
 	}
 
