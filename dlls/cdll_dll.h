@@ -163,10 +163,12 @@ enum WeaponId
 constexpr Vector VEC_HULL_MIN(-16, -16, -36);
 constexpr Vector VEC_HULL_MAX(16, 16, 36);
 constexpr Vector VEC_HUMAN_HULL_MIN(-16, -16, 0);
-constexpr Vector VEC_HUMAN_HULL_MAX(16, 16, 72);
 constexpr Vector VEC_HUMAN_HULL_DUCK(16, 16, 36);
 
-constexpr Vector VEC_VIEW(0, 0, 28);
+// Gordon is 1m80, (72u) with eyes at 1m60 (64u, 72/2+28).
+// Ada is 1m65, (66u) with eyes at 1m46 (58u, 66/2+23).
+constexpr Vector VEC_VIEW(0, 0, 25);
+constexpr Vector VEC_HUMAN_HULL_MAX(16, 16, 66);
 
 constexpr Vector VEC_DUCK_HULL_MIN(-16, -16, -18);
 constexpr Vector VEC_DUCK_HULL_MAX(16, 16, 18);
