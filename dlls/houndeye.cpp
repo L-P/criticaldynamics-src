@@ -38,6 +38,12 @@
 
 #define HOUNDEYE_SOUND_STARTLE_VOLUME 128 // how loud a sound has to be to badly scare a sleeping houndeye
 
+// Applies when woken up by a script.
+#define SF_FAST_WAKEUP_SEQUENCE (1 << 3)
+
+// Start sound alseep.
+#define SF_START_ASLEEP (1 << 6)
+
 //=========================================================
 // monster-specific tasks
 //=========================================================
@@ -76,6 +82,7 @@ class CHoundeye : public CSquadMonster
 {
 public:
 	void Spawn() override;
+	void StartMonster() override;
 	void Precache() override;
 	int Classify() override;
 	void HandleAnimEvent(MonsterEvent_t* pEvent) override;
@@ -339,8 +346,8 @@ void CHoundeye::Spawn()
 	pev->health = gSkillData.houndeyeHealth;
 	pev->yaw_speed = 5;	   //!!! should we put this in the monster's changeanim function since turn rates may vary with state/anim?
 	m_flFieldOfView = 0.5; // indicates the width of this monster's forward view cone ( as a dotproduct result )
+	m_fAsleep = FBitSet(pev->spawnflags, SF_START_ASLEEP);
 	m_MonsterState = MONSTERSTATE_NONE;
-	m_fAsleep = false; // everyone spawns awake
 	m_fDontBlink = false;
 	m_afCapability |= bits_CAP_SQUAD;
 
@@ -966,6 +973,15 @@ Task_t tlHoundSleep[] =
 		//{ TASK_WAIT_RANDOM,			(float)10				},
 };
 
+Task_t tlHoundSleepInstant[] =
+	{
+		{TASK_STOP_MOVING, (float)0},
+		{TASK_SET_ACTIVITY, (float)ACT_IDLE},
+		{TASK_SET_ACTIVITY, (float)ACT_CROUCHIDLE},
+		{TASK_HOUND_FALL_ASLEEP, (float)0},
+		{TASK_HOUND_CLOSE_EYE, (float)0},
+};
+
 Schedule_t slHoundSleep[] =
 	{
 		{tlHoundSleep,
@@ -979,6 +995,21 @@ Schedule_t slHoundSleep[] =
 				bits_SOUND_PLAYER |
 				bits_SOUND_WORLD,
 			"Hound Sleep"},
+};
+
+Schedule_t slHoundSleepInstant[] =
+	{
+		{tlHoundSleepInstant,
+			ARRAYSIZE(tlHoundSleepInstant),
+			bits_COND_HEAR_SOUND |
+				bits_COND_LIGHT_DAMAGE |
+				bits_COND_HEAVY_DAMAGE |
+				bits_COND_NEW_ENEMY,
+
+			bits_SOUND_COMBAT |
+				bits_SOUND_PLAYER |
+				bits_SOUND_WORLD,
+			"Hound Sleep (instant)"},
 };
 
 // wake and stand up lazily
@@ -1162,10 +1193,13 @@ Schedule_t* CHoundeye::GetScheduleOfType(int Type)
 			return &slHoundWakeUrgent[0];
 		}
 
-		else
+		else // hound is waking up on its own
 		{
-			// hound is waking up on its own
-			return &slHoundWakeLazy[0];
+			if (FBitSet(pev->spawnflags, SF_FAST_WAKEUP_SEQUENCE)) {
+				return &slHoundWakeUrgent[0];
+			} else {
+				return &slHoundWakeLazy[0];
+			}
 		}
 	}
 	switch (Type)
@@ -1290,4 +1324,13 @@ Schedule_t* CHoundeye::GetSchedule()
 	}
 
 	return CSquadMonster::GetSchedule();
+}
+
+void CHoundeye::StartMonster(void)
+{
+	CSquadMonster::StartMonster();
+
+	if (FBitSet(pev->spawnflags, SF_START_ASLEEP)) {
+		ChangeSchedule(&slHoundSleepInstant[0]);
+	}
 }
