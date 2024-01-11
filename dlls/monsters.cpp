@@ -2982,6 +2982,10 @@ bool CBaseMonster::KeyValue(KeyValueData* pkvd)
 	{
 		m_AllowItemDropping = atoi(pkvd->szValue) != 0;
 	}
+	else if (FStrEq(pkvd->szKeyName, "dont_fall_to_ground"))
+	{
+		m_DontFallToGround = atoi(pkvd->szValue) != 0;
+	}
 
 	return CBaseToggle::KeyValue(pkvd);
 }
@@ -3296,8 +3300,11 @@ void CBaseMonster::MonsterInitDead()
 
 	// Setup health counters, etc.
 	BecomeDead();
-	SetThink(&CBaseMonster::CorpseFallThink);
-	pev->nextthink = gpGlobals->time + 0.5;
+
+	if (!m_DontFallToGround) {
+		SetThink(&CBaseMonster::CorpseFallThink);
+		pev->nextthink = gpGlobals->time + 0.5;
+	}
 }
 
 //=========================================================
