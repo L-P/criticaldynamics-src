@@ -50,7 +50,9 @@ void CGauss::Spawn()
 	m_iId = WEAPON_GAUSS;
 	SET_MODEL(ENT(pev), "models/w_gauss.mdl");
 
-	m_iDefaultAmmo = GAUSS_DEFAULT_GIVE;
+	if (m_iDefaultAmmo != PICKUPAMMO_NONE) {
+		m_iDefaultAmmo = GAUSS_DEFAULT_GIVE;
+	}
 
 	FallInit(); // get ready to fall down.
 }

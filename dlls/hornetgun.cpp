@@ -43,6 +43,7 @@ void CHgun::Spawn()
 	m_iId = WEAPON_HORNETGUN;
 	SET_MODEL(ENT(pev), "models/w_hgun.mdl");
 
+	// Illimited ammo, ignore pickupammo.
 	m_iDefaultAmmo = HIVEHAND_DEFAULT_GIVE;
 	m_iFirePhase = 0;
 

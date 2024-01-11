@@ -30,7 +30,9 @@ void CGlock::Spawn()
 	m_iId = WEAPON_GLOCK;
 	SET_MODEL(ENT(pev), "models/w_9mmhandgun.mdl");
 
-	m_iDefaultAmmo = GLOCK_DEFAULT_GIVE;
+	if (m_iDefaultAmmo != PICKUPAMMO_NONE) {
+		m_iDefaultAmmo = GLOCK_DEFAULT_GIVE;
+	}
 
 	FallInit(); // get ready to fall down.
 }

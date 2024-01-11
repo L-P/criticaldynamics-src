@@ -366,7 +366,9 @@ void CTripmine::Spawn()
 
 	FallInit(); // get ready to fall down
 
-	m_iDefaultAmmo = TRIPMINE_DEFAULT_GIVE;
+	if (m_iDefaultAmmo <= 0) {
+		m_iDefaultAmmo = TRIPMINE_DEFAULT_GIVE;
+	}
 
 	//HACK: force the body to the first person view by default so it doesn't show up as a huge tripmine for a second.
 #ifdef CLIENT_DLL

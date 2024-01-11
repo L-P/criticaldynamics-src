@@ -197,7 +197,10 @@ void CSatchel::Spawn()
 	m_iId = WEAPON_SATCHEL;
 	SET_MODEL(ENT(pev), "models/w_satchel.mdl");
 
-	m_iDefaultAmmo = SATCHEL_DEFAULT_GIVE;
+
+	if (m_iDefaultAmmo <= 0) {
+		m_iDefaultAmmo = SATCHEL_DEFAULT_GIVE;
+	}
 
 	FallInit(); // get ready to fall down.
 }

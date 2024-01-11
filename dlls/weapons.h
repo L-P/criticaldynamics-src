@@ -18,6 +18,9 @@
 #include "effects.h"
 #include "weaponinfo.h"
 
+// m_iDefaultAmmo value when the mapper requests empty guns.
+#define PICKUPAMMO_NONE -1
+
 class CBasePlayer;
 class CBasePlayerWeapon;
 
@@ -292,6 +295,7 @@ class CBasePlayerWeapon : public CBasePlayerItem
 public:
 	bool Save(CSave& save) override;
 	bool Restore(CRestore& restore) override;
+	bool KeyValue(KeyValueData* pkvd) override;
 
 	static TYPEDESCRIPTION m_SaveData[];
 

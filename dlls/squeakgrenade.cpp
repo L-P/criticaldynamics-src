@@ -410,7 +410,9 @@ void CSqueak::Spawn()
 
 	FallInit(); //get ready to fall down.
 
-	m_iDefaultAmmo = SNARK_DEFAULT_GIVE;
+	if (m_iDefaultAmmo <= 0) {
+		m_iDefaultAmmo = SNARK_DEFAULT_GIVE;
+	}
 
 	pev->sequence = 1;
 	pev->animtime = gpGlobals->time;

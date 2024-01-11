@@ -49,7 +49,9 @@ void CPython::Spawn()
 	m_iId = WEAPON_PYTHON;
 	SET_MODEL(ENT(pev), "models/w_357.mdl");
 
-	m_iDefaultAmmo = PYTHON_DEFAULT_GIVE;
+	if (m_iDefaultAmmo != PICKUPAMMO_NONE) {
+		m_iDefaultAmmo = PYTHON_DEFAULT_GIVE;
+	}
 
 	FallInit(); // get ready to fall down.
 }

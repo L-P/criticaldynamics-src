@@ -229,7 +229,9 @@ void CCrossbow::Spawn()
 	m_iId = WEAPON_CROSSBOW;
 	SET_MODEL(ENT(pev), "models/w_crossbow.mdl");
 
-	m_iDefaultAmmo = CROSSBOW_DEFAULT_GIVE;
+	if (m_iDefaultAmmo != PICKUPAMMO_NONE) {
+		m_iDefaultAmmo = CROSSBOW_DEFAULT_GIVE;
+	}
 
 	FallInit(); // get ready to fall down.
 }

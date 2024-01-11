@@ -622,6 +622,24 @@ bool CBasePlayerWeapon::AddDuplicate(CBasePlayerItem* pOriginal)
 }
 
 
+bool CBasePlayerWeapon::KeyValue(KeyValueData* pkvd) {
+	if (FStrEq(pkvd->szKeyName, "pickupammo")) {
+		// HACK: To keep edits at a minimum we swap 0 and -1. 0 is already used
+		// as a canary value.
+		m_iDefaultAmmo = atoi(pkvd->szValue);
+		if (m_iDefaultAmmo == 0) {
+			m_iDefaultAmmo = -1;
+		} else if (m_iDefaultAmmo == -1) {
+			m_iDefaultAmmo == 0;
+		}
+
+		return true;
+	}
+
+	return CBasePlayerItem::KeyValue(pkvd);
+}
+
+
 void CBasePlayerWeapon::AddToPlayer(CBasePlayer* pPlayer)
 {
 	/*
@@ -939,6 +957,11 @@ void CBasePlayerAmmo::DefaultTouch(CBaseEntity* pOther)
 //=========================================================
 bool CBasePlayerWeapon::ExtractAmmo(CBasePlayerWeapon* pWeapon)
 {
+	// Empty gun if mapper said so.
+	if (m_iDefaultAmmo == -1) {
+		return true;
+	}
+
 	bool iReturn = false;
 
 	if (pszAmmo1() != NULL)

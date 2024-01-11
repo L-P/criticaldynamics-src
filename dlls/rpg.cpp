@@ -332,7 +332,7 @@ void CRpg::Spawn()
 		// more default ammo in multiplay.
 		m_iDefaultAmmo = RPG_DEFAULT_GIVE * 2;
 	}
-	else
+	else if (m_iDefaultAmmo != PICKUPAMMO_NONE)
 	{
 		m_iDefaultAmmo = RPG_DEFAULT_GIVE;
 	}
