@@ -27,6 +27,7 @@
 #include "animation.h"
 #include "soundent.h"
 
+#define SCIENTIST_DEFAULT_MODEL "models/scientist.mdl"
 
 #define NUM_SCIENTIST_HEADS 4 // four heads available for scientist model
 enum
@@ -652,7 +653,7 @@ void CScientist::Spawn()
 
 	Precache();
 
-	SET_MODEL(ENT(pev), "models/scientist.mdl");
+	SET_MODEL(ENT(pev), SCIENTIST_DEFAULT_MODEL);
 	UTIL_SetSize(pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
 
 	pev->solid = SOLID_SLIDEBOX;
@@ -683,7 +684,7 @@ void CScientist::Spawn()
 //=========================================================
 void CScientist::Precache()
 {
-	PRECACHE_MODEL("models/scientist.mdl");
+	PRECACHE_MODEL(SCIENTIST_DEFAULT_MODEL);
 	PRECACHE_SOUND("scientist/sci_pain1.wav");
 	PRECACHE_SOUND("scientist/sci_pain2.wav");
 	PRECACHE_SOUND("scientist/sci_pain3.wav");
@@ -1159,9 +1160,11 @@ const char* CDeadScientist::m_szPoses[] = {"lying_on_back", "lying_on_stomach", 
 
 bool CDeadScientist::KeyValue(KeyValueData* pkvd)
 {
-	if (FStrEq(pkvd->szKeyName, "pose"))
-	{
+	if (FStrEq(pkvd->szKeyName, "pose")) {
 		m_iPose = atoi(pkvd->szValue);
+		return true;
+	} else if (FStrEq(pkvd->szKeyName, "model")) {
+		pev->model = ALLOC_STRING(pkvd->szValue);
 		return true;
 	}
 
@@ -1174,8 +1177,12 @@ LINK_ENTITY_TO_CLASS(monster_scientist_dead, CDeadScientist);
 //
 void CDeadScientist::Spawn()
 {
-	PRECACHE_MODEL("models/scientist.mdl");
-	SET_MODEL(ENT(pev), "models/scientist.mdl");
+	if (FStringNull(pev->model)) {
+		pev->model = MAKE_STRING(SCIENTIST_DEFAULT_MODEL);
+	}
+
+	PRECACHE_MODEL(STRING(pev->model));
+	SET_MODEL(ENT(pev), STRING(pev->model));
 
 	pev->effects = 0;
 	pev->sequence = 0;
@@ -1256,8 +1263,8 @@ typedef enum
 //
 void CSittingScientist::Spawn()
 {
-	PRECACHE_MODEL("models/scientist.mdl");
-	SET_MODEL(ENT(pev), "models/scientist.mdl");
+	PRECACHE_MODEL(SCIENTIST_DEFAULT_MODEL);
+	SET_MODEL(ENT(pev), SCIENTIST_DEFAULT_MODEL);
 	Precache();
 	InitBoneControllers();
 
