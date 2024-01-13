@@ -630,7 +630,7 @@ bool CBasePlayerWeapon::KeyValue(KeyValueData* pkvd) {
 		if (m_iDefaultAmmo == 0) {
 			m_iDefaultAmmo = -1;
 		} else if (m_iDefaultAmmo == -1) {
-			m_iDefaultAmmo == 0;
+			m_iDefaultAmmo = 0;
 		}
 
 		return true;
