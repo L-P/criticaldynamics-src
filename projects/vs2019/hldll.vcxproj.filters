@@ -46,6 +46,15 @@
     <Filter Include="Header Files\public">
       <UniqueIdentifier>{ccda2445-0302-44ae-a537-be89f5811329}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\addon">
+      <UniqueIdentifier>{d377348e-d6c4-40f9-9846-afce80996631}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\addon">
+      <UniqueIdentifier>{6a472e9a-b583-4a6c-bb69-87dabce8292c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\addon\wasm">
+      <UniqueIdentifier>{ed005e81-a7dd-496e-815d-2dbe7b8f3469}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\dlls\aflock.cpp">
@@ -367,10 +376,13 @@
       <Filter>Source Files\public</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\addon\game_wasm.cpp">
-      <Filter>Source Files\dlls\addon</Filter>
+      <Filter>Source Files\addon</Filter>
     </ClCompile>
     <ClCompile Include="..\..\dlls\addon\wasm_native.cpp">
-      <Filter>Source Files\dlls\addon</Filter>
+      <Filter>Source Files\addon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\dlls\addon\world.cpp">
+      <Filter>Source Files\addon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -625,6 +637,24 @@
     </ClInclude>
     <ClInclude Include="..\..\public\interface.h">
       <Filter>Header Files\public</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dlls\addon\game_wasm.hpp">
+      <Filter>Header Files\addon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dlls\addon\wasm_native.hpp">
+      <Filter>Header Files\addon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dlls\addon\wasm\aot_export.h">
+      <Filter>Header Files\addon\wasm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dlls\addon\wasm\lib_export.h">
+      <Filter>Header Files\addon\wasm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dlls\addon\wasm\wasm_c_api.h">
+      <Filter>Header Files\addon\wasm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\dlls\addon\wasm\wasm_export.h">
+      <Filter>Header Files\addon\wasm</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
