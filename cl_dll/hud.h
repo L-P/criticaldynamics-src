@@ -578,7 +578,7 @@ public:
 	bool Redraw(float flTime, bool intermission);
 	bool UpdateClientData(client_data_t* cdata, float time);
 
-	CHud() : m_iSpriteCount(0), m_pHudList(NULL) {}
+	CHud() : m_pHudList(NULL), m_iSpriteCount(0) {}
 	~CHud(); // destructor, frees allocated memory
 
 	// user messages
