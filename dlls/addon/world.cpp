@@ -17,5 +17,5 @@ void CWorld::Think(void) {
 	CBaseEntity::Think();
 
 	handle_ent_fire();
-	pev->nextthink = gpGlobals->time + .1f;
+	pev->nextthink = pev->ltime + .001f;
 }
