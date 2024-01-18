@@ -251,7 +251,14 @@ void CWallHealth::Off()
 	if (m_iOn > 1)
 		STOP_SOUND(ENT(pev), CHAN_STATIC, "items/medcharge4.wav");
 
-	m_iOn = 0;
+	// Fire target once when turning off.
+	if (m_iOn >= 1) {
+		if (pev->target) {
+			FireTargets(STRING(pev->target), this, this, USE_TOGGLE, 0);
+		}
+
+		m_iOn = 0;
+	}
 
 	if ((0 == m_iJuice) && ((m_iReactivate = g_pGameRules->FlHealthChargerRechargeTime()) > 0))
 	{
