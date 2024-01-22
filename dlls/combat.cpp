@@ -850,12 +850,6 @@ bool CBaseMonster::TakeDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, f
 		PainSound(); // "Ouch!"
 	}
 
-	//!!!LATER - make armor consideration here!
-	flTake = flDamage;
-
-	// set damage type sustained
-	m_bitsDamageType |= bitsDamageType;
-
 	// grab the vector of the incoming attack. ( pretend that the inflictor is a little lower than it really is, so the body will tend to fly upward a bit).
 	vecDir = Vector(0, 0, 0);
 	if (!FNullEnt(pevInflictor))
@@ -865,8 +859,27 @@ bool CBaseMonster::TakeDamage(entvars_t* pevInflictor, entvars_t* pevAttacker, f
 		{
 			vecDir = (pInflictor->Center() - Vector(0, 0, 10) - Center()).Normalize();
 			vecDir = g_vecAttackDir = vecDir.Normalize();
+
+			// Get behind an ennemy to backstab it and kill it instantly. Or
+			// jump on its head. That might be OP. Oh well. TODO FIXME.
+			if (!IsPlayer() && (bitsDamageType & (DMG_CLUB | DMG_SLASH))) {
+				const auto dot = DotProduct(pev->angles.Normalize(), vecDir);
+
+				if (dot < .5) {
+					flDamage = pev->health;
+					bitsDamageType |= DMG_NEVERGIB;
+					bitsDamageType &= ~(DMG_ALWAYSGIB);
+				}
+			}
 		}
 	}
+
+
+	//!!!LATER - make armor consideration here!
+	flTake = flDamage;
+
+	// set damage type sustained
+	m_bitsDamageType |= bitsDamageType;
 
 	// add to the damage total for clients, which will be sent as a single
 	// message at the end of the frame
