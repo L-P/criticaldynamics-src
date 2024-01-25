@@ -2981,10 +2981,12 @@ bool CBaseMonster::KeyValue(KeyValueData* pkvd)
 	else if (FStrEq(pkvd->szKeyName, "allow_item_dropping"))
 	{
 		m_AllowItemDropping = atoi(pkvd->szValue) != 0;
+		return true;
 	}
 	else if (FStrEq(pkvd->szKeyName, "dont_fall_to_ground"))
 	{
 		m_DontFallToGround = atoi(pkvd->szValue) != 0;
+		return true;
 	}
 
 	return CBaseToggle::KeyValue(pkvd);
