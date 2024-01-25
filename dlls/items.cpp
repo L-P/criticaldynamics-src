@@ -30,6 +30,8 @@
 #include "gamerules.h"
 #include "UserMessages.h"
 
+#define SF_DONT_FALL_TO_GROUND (1 << 0)
+
 class CWorldItem : public CBaseEntity
 {
 public:
@@ -94,11 +96,15 @@ void CItem::Spawn()
 	UTIL_SetSize(pev, Vector(-16, -16, 0), Vector(16, 16, 16));
 	SetTouch(&CItem::ItemTouch);
 
-	if (DROP_TO_FLOOR(ENT(pev)) == 0)
-	{
-		ALERT(at_error, "Item %s fell out of level at %f,%f,%f", STRING(pev->classname), pev->origin.x, pev->origin.y, pev->origin.z);
-		UTIL_Remove(this);
-		return;
+	if (FBitSet(pev->spawnflags, SF_DONT_FALL_TO_GROUND)) {
+		pev->movetype = MOVETYPE_NONE;
+	} else {
+		if (DROP_TO_FLOOR(ENT(pev)) == 0)
+		{
+			ALERT(at_error, "Item %s fell out of level at %f,%f,%f", STRING(pev->classname), pev->origin.x, pev->origin.y, pev->origin.z);
+			UTIL_Remove(this);
+			return;
+		}
 	}
 }
 
