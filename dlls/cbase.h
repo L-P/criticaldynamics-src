@@ -118,6 +118,9 @@ class CSquadMonster;
 
 #define SF_NORESPAWN (1 << 30) // !!!set this bit on guns and stuff that should never respawn.
 
+// Items and weapons.
+#define SF_DONT_FALL_TO_GROUND (1 << 0)
+
 //
 // EHANDLE. Safe way to point to CBaseEntities who may die between frames
 //

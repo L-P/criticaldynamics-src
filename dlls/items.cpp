@@ -30,8 +30,6 @@
 #include "gamerules.h"
 #include "UserMessages.h"
 
-#define SF_DONT_FALL_TO_GROUND (1 << 0)
-
 class CWorldItem : public CBaseEntity
 {
 public:

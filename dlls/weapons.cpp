@@ -412,8 +412,14 @@ void CBasePlayerItem::FallInit()
 	UTIL_SetSize(pev, Vector(0, 0, 0), Vector(0, 0, 0)); //pointsize until it lands on the ground.
 
 	SetTouch(&CBasePlayerItem::DefaultTouch);
-	SetThink(&CBasePlayerItem::FallThink);
 
+	if (FBitSet(pev->spawnflags, SF_DONT_FALL_TO_GROUND)) {
+		pev->movetype = MOVETYPE_NONE;
+		Materialize();
+		return;
+	}
+
+	SetThink(&CBasePlayerItem::FallThink);
 	pev->nextthink = gpGlobals->time + 0.1;
 }
 
@@ -884,7 +890,12 @@ void CBasePlayerWeapon::Holster()
 
 void CBasePlayerAmmo::Spawn()
 {
-	pev->movetype = MOVETYPE_TOSS;
+	if (FBitSet(pev->spawnflags, SF_DONT_FALL_TO_GROUND)) {
+		pev->movetype = MOVETYPE_NONE;
+	} else {
+		pev->movetype = MOVETYPE_TOSS;
+	}
+
 	pev->solid = SOLID_TRIGGER;
 	UTIL_SetSize(pev, Vector(-16, -16, 0), Vector(16, 16, 16));
 	UTIL_SetOrigin(pev, pev->origin);
