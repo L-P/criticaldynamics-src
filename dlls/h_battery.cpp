@@ -194,7 +194,7 @@ void CRecharge::Off()
 		STOP_SOUND(ENT(pev), CHAN_STATIC, "items/suitcharge1.wav");
 
 	// Fire target once when turning off.
-	if (m_iOn >= 1) {
+	if (m_iOn >= 1 && m_iJuice <= 0) {
 		if (pev->target) {
 			FireTargets(STRING(pev->target), this, this, USE_TOGGLE, 0);
 		}
