@@ -537,7 +537,7 @@ void CBaseDoor::DoorTouch(CBaseEntity* pOther)
 	// If door is somebody's target, then touching does nothing.
 	// You have to activate the owner (e.g. button).
 
-	if (!FStringNull(pev->targetname))
+	if (!FStringNull(pev->targetname) && !FBitSet(pev->spawnflags, SF_DOOR_UNLOCKED))
 	{
 		// play locked sound
 		PlayLockSounds(pev, &m_ls, true, false);
@@ -557,9 +557,28 @@ void CBaseDoor::DoorTouch(CBaseEntity* pOther)
 void CBaseDoor::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value)
 {
 	m_hActivator = pActivator;
-	// if not ready to be used, ignore "use" command.
-	if (m_toggle_state == TS_AT_BOTTOM || FBitSet(pev->spawnflags, SF_DOOR_NO_AUTO_RETURN) && m_toggle_state == TS_AT_TOP)
-		DoorActivate();
+
+	switch (useType) {
+		case USE_TOGGLE:
+			// if not ready to be used, ignore "use" command.
+			if (m_toggle_state == TS_AT_BOTTOM || FBitSet(pev->spawnflags, SF_DOOR_NO_AUTO_RETURN) && m_toggle_state == TS_AT_TOP) {
+				DoorActivate();
+			}
+			break;
+
+		// When specifying a direction, ignore checks and do what you're told.
+		case USE_ON:
+			if (m_toggle_state == TS_AT_BOTTOM) {
+				PlayLockSounds(pev, &m_ls, false, false);
+				DoorGoUp();
+			}
+			break;
+		case USE_OFF:
+			if (m_toggle_state == TS_AT_TOP) {
+				DoorGoDown();
+			}
+			break;
+	}
 }
 
 //
