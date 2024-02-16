@@ -2136,6 +2136,7 @@ void CTriggerChangeTarget::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, US
 #define SF_CAMERA_PLAYER_POSITION 1
 #define SF_CAMERA_PLAYER_TARGET 2
 #define SF_CAMERA_PLAYER_TAKECONTROL 4
+#define SF_CAMERA_PLAYER_NODRAW 8
 
 class CTriggerCamera : public CBaseDelay
 {
@@ -2235,13 +2236,6 @@ void CTriggerCamera::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE
 	if (!ShouldToggle(useType, m_state))
 		return;
 
-	// Toggle state
-	m_state = !m_state;
-	if (!m_state)
-	{
-		m_flReturnTime = gpGlobals->time;
-		return;
-	}
 	if (!pActivator || !pActivator->IsPlayer())
 	{
 		pActivator = UTIL_GetLocalPlayer();
@@ -2251,11 +2245,25 @@ void CTriggerCamera::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE
 			return;
 		}
 	}
-
 	auto player = static_cast<CBasePlayer*>(pActivator);
 
-	m_hPlayer = pActivator;
+	// Toggle state
+	m_state = !m_state;
+	if (!m_state)
+	{
+		if (FBitSet(pev->spawnflags, SF_CAMERA_PLAYER_NODRAW)) {
+			player->pev->effects &= ~EF_NODRAW;
+		}
 
+		m_flReturnTime = gpGlobals->time;
+		return;
+	}
+
+	if (FBitSet(pev->spawnflags, SF_CAMERA_PLAYER_NODRAW)) {
+		player->pev->effects |= EF_NODRAW;
+	}
+
+	m_hPlayer = pActivator;
 	m_flReturnTime = gpGlobals->time + m_flWait;
 	pev->speed = m_initialSpeed;
 	m_targetSpeed = m_initialSpeed;
