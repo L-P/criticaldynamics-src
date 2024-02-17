@@ -108,7 +108,7 @@ void CBasePlatTrain::Precache()
 	switch (m_bMoveSnd)
 	{
 	case 0:
-		pev->noiseMoving = MAKE_STRING("common/null.wav");
+		pev->noiseMoving = NULL;
 		break;
 	case 1:
 		PRECACHE_SOUND("plats/bigmove1.wav");
