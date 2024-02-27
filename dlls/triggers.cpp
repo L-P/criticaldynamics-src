@@ -1756,29 +1756,50 @@ class CLadder : public CBaseTrigger
 public:
 	void Spawn() override;
 	void Precache() override;
+	void Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value) override;
 };
 LINK_ENTITY_TO_CLASS(func_ladder, CLadder);
 
 //=========================================================
 // func_ladder - makes an area vertically negotiable
 //=========================================================
+void CLadder::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value)
+{
+	switch (useType) {
+		case USE_ON:
+			pev->skin = CONTENTS_LADDER;
+			break;
+		case USE_OFF:
+			pev->skin = CONTENTS_EMPTY;
+			break;
+		case USE_TOGGLE:
+			pev->skin = (pev->skin == CONTENTS_EMPTY) ? CONTENTS_LADDER : CONTENTS_EMPTY;
+			break;
+	}
+
+	// If coming from a saved game with a disabled ladder it will never become
+	// a ladder again because the model will be optimized out. We need to
+	// re-set the model.
+	// My attemps to do this at load time have failed.
+	SET_MODEL(ENT(pev), STRING(pev->model));
+}
+
 void CLadder::Precache()
 {
-	// Do all of this in here because we need to 'convert' old saved games
-	pev->solid = SOLID_NOT;
-	pev->skin = CONTENTS_LADDER;
-	if (CVAR_GET_FLOAT("showtriggers") == 0)
-	{
+	if (CVAR_GET_FLOAT("showtriggers") == 0) {
 		pev->rendermode = kRenderTransTexture;
 		pev->renderamt = 0;
 	}
-	pev->effects &= ~EF_NODRAW;
 }
 
 
 void CLadder::Spawn()
 {
 	Precache();
+
+	pev->solid = SOLID_NOT;
+	pev->skin = CONTENTS_LADDER;
+	pev->effects &= ~EF_NODRAW;
 
 	SET_MODEL(ENT(pev), STRING(pev->model)); // set size and link into world
 	pev->movetype = MOVETYPE_PUSH;
