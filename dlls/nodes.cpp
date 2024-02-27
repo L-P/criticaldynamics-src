@@ -1494,7 +1494,7 @@ void CTestHull::Spawn(entvars_t* pevMasterNode)
 	pev->solid = SOLID_SLIDEBOX;
 	pev->movetype = MOVETYPE_STEP;
 	pev->effects = 0;
-	pev->health = 50;
+	pev->health = 0;
 	pev->yaw_speed = 8;
 
 	if (0 != WorldGraph.m_fGraphPresent)
@@ -1632,6 +1632,8 @@ void CTestHull::CallBuildNodeGraph()
 //=========================================================
 void CTestHull::BuildNodeGraph()
 {
+	ALERT(at_console, "Building node graph…\n");
+
 	TraceResult tr;
 
 	CLink* pTempPool; // temporary link pool
@@ -2062,7 +2064,7 @@ void CTestHull::BuildNodeGraph()
 
 	// save the node graph for this level
 	WorldGraph.FSaveGraph(STRING(gpGlobals->mapname));
-	ALERT(at_console, "Done.\n");
+	ALERT(at_console, "Node graph built.\n");
 }
 
 
