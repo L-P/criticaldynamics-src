@@ -195,6 +195,9 @@ class CItemSuit : public CItem
 			EMIT_SOUND_SUIT(pPlayer->edict(), "!HEV_AAx"); // long version of suit logon
 
 		pPlayer->SetHasSuit(true);
+		// Ensure we switch cuffs on viewmodel.
+		pPlayer->RedeployWeapon();
+
 		return true;
 	}
 };

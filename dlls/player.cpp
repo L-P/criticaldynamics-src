@@ -4688,6 +4688,15 @@ bool CBasePlayer::HasNamedPlayerItem(const char* pszItemName)
 	return false;
 }
 
+void CBasePlayer::RedeployWeapon()
+{
+	if (!m_pActiveItem || !m_pActiveItem->CanDeploy()) {
+		return;
+	}
+
+	m_pActiveItem->Deploy();
+}
+
 //=========================================================
 //
 //=========================================================
