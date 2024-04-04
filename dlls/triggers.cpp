@@ -30,7 +30,8 @@
 
 #define SF_TRIGGER_PUSH_START_OFF 2		   //spawnflag that makes trigger_push spawn turned OFF
 #define SF_TRIGGER_HURT_TARGETONCE 1	   // Only fire hurt target once
-#define SF_TRIGGER_HURT_START_OFF 2		   //spawnflag that makes trigger_push spawn turned OFF
+#define SF_TRIGGER_HURT_START_OFF 2		   //spawnflag that makes trigger_hurt spawn turned OFF
+#define SF_TRIGGER_HURT_ONCE 4			   // only damage once then disappear
 #define SF_TRIGGER_HURT_NO_CLIENTS 8	   //spawnflag that makes trigger_push spawn turned OFF
 #define SF_TRIGGER_HURT_CLIENTONLYFIRE 16  // trigger hurt will only fire its target if it is hurting a client
 #define SF_TRIGGER_HURT_CLIENTONLYTOUCH 32 // only clients may touch this trigger.
@@ -1010,7 +1011,6 @@ void CBaseTrigger::HurtTouch(CBaseEntity* pOther)
 	pev->dmgtime = gpGlobals->time + 0.5; // half second delay until this trigger can hurt toucher again
 
 
-
 	if (!FStringNull(pev->target))
 	{
 		// trigger has a target it wants to fire.
@@ -1026,6 +1026,11 @@ void CBaseTrigger::HurtTouch(CBaseEntity* pOther)
 		SUB_UseTargets(pOther, USE_TOGGLE, 0);
 		if ((pev->spawnflags & SF_TRIGGER_HURT_TARGETONCE) != 0)
 			pev->target = 0;
+	}
+
+	if (FBitSet(pev->spawnflags, SF_TRIGGER_HURT_ONCE)) {
+		SetThink(&CBaseTrigger::SUB_Remove);
+		pev->nextthink = gpGlobals->time + 0.1; // shorter than dmgtime
 	}
 }
 
